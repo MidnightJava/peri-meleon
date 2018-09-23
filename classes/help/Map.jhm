@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+  PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+         "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+	<mapID target="windowicon" url="images/icon16.gif" />
+	<mapID target="toplevelfolder" url="images/toplevel.gif" />
+	<mapID target="trouble.whine" url="trouble/whine.html" />
+
+	<mapID target="release.features" url="release/features.html" />
+	<mapID target="release.bugs" url="release/bugs.html" />
+</map>
