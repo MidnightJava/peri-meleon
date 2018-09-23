@@ -18,7 +18,7 @@ public final class PeriMeleon {
 	//Note use of Unicode "o with macron" for yet another touch of elitism!
 	//test SVN commit e-mail notification: test 2
 	public static final String applicationName = "PeriMele\u014dn";
-	public static final String version = "version 1.4.1b (166)";
+	public static final String version = "version 1.4.2 (166)";
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 	public static final SimpleDateFormat isoFormat =  new SimpleDateFormat("yyyy-MM-dd");
 	public static final SimpleDateFormat elegantFormat =  new SimpleDateFormat("MMMM d, yyyy");

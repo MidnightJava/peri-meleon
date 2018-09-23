@@ -37,6 +37,14 @@ public class MemberAgeFilter implements MemberFilter {
 		dobValue.set(Calendar.HOUR_OF_DAY, 0);
 		dobValue.set(Calendar.MINUTE, 0);
 		Date dobBeginDate = new Date(dobValue.getTimeInMillis());
+		GregorianCalendar dobEndValue = new GregorianCalendar();
+		dobEndValue.setTime(dobBeginDate);
+		dobEndValue.add(Calendar.YEAR, 1);
+		dobEndValue.add(Calendar.DAY_OF_YEAR, -1);
+		dobEndValue.set(Calendar.HOUR_OF_DAY, 23);
+		dobEndValue.set(Calendar.MINUTE, 59);
+		dobEndValue.set(Calendar.SECOND, 59);
+		Date dobEndDate = new Date(dobEndValue.getTimeInMillis());
 		GregorianCalendar baseDate = new GregorianCalendar();
 		baseDate.setTime(date.getValue());
 		baseDate.add(Calendar.YEAR, -age);
@@ -53,7 +61,8 @@ public class MemberAgeFilter implements MemberFilter {
 			case GREATER_EQUAL:
 				return (dobBeginDate.before(compareDate) ||  dobBeginDate.equals(compareDate));
 			case EQUAL:
-				return dobBeginDate.equals(compareDate);
+				return ((dobBeginDate.before(compareDate) || dobBeginDate.equals(compareDate)) && 
+						(dobEndDate.after(compareDate) || dobEndDate.equals(compareDate)));
 		}
 		return false;
 	}
