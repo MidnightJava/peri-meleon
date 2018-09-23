@@ -1,0 +1,15 @@
+package com.tamelea.pm.data;
+
+public enum TransactionType {
+	BIRTH,
+	PROFESSION,	
+	RECEIVED,
+	SUSPENDED,
+	SUSPENSION_LIFTED,
+	EXCOMMUNICATED,
+	RESTORED,
+	DISMISSAL_PENDING,
+	DISMISSED,
+	REMOVED_ADMIN,
+	DIED,
+}
