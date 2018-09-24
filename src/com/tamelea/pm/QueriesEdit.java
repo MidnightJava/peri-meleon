@@ -1,5 +1,6 @@
 package com.tamelea.pm;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -9,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.tamelea.pm.data.Data;
 import com.tamelea.pm.data.Month;
@@ -99,7 +101,7 @@ final class QueriesEdit {
 	private final class QueriesMemberStatusAction extends AbstractAction {
 
 	    public QueriesMemberStatusAction() {
-			super("Members by Status...");
+			super("Search Members by Status...");
 		}
 		
 		public void actionPerformed(ActionEvent e) {
@@ -111,14 +113,24 @@ final class QueriesEdit {
 			nonResident = new JCheckBox("Non Resident");
 			nonResident.setSelected(false);
 			nonResident.addActionListener(new CheckBoxListener());
+			JPanel mainPane = new JPanel();
+			mainPane.setLayout(new GridLayout(2, 3, 2, 2));
 			JPanel pane = new JPanel();
 			String msg = "Show members with the following status:";
 			pane.add(new JLabel(msg));
 			pane.add(resident);
 			pane.add(nonResident);
+			mainPane.add(pane);
+			pane = new JPanel();
+			msg = "Name contains:";
+			pane.add(new JLabel(msg));
+			JTextField text = new JTextField();
+			text.setColumns(30);
+			pane.add(text);
+			mainPane.add(pane);
 			MemberStatus chosen = (MemberStatus)JOptionPane.showInputDialog(
 					view,
-					pane,
+					mainPane,
 					"Members by Status",
 					JOptionPane.PLAIN_MESSAGE,
 					null,
@@ -134,7 +146,7 @@ final class QueriesEdit {
 						rs = ResidenceSelector.NON_RESIDENTS;
 					}
 				}
-				new MembersByStatusView(data, view, chosen, rs).sizeAndPlace();
+				new MembersByStatusView(data, view, chosen, rs, text.getText()).sizeAndPlace();
 			}
 		}
 		
