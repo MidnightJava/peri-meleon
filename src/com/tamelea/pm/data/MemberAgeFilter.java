@@ -36,15 +36,15 @@ public class MemberAgeFilter implements MemberFilter {
 		dobValue.setTime(dob.getValue());
 		dobValue.set(Calendar.HOUR_OF_DAY, 0);
 		dobValue.set(Calendar.MINUTE, 0);
-		Date dobBeginDate = new Date(dobValue.getTimeInMillis());
-		GregorianCalendar dobEndValue = new GregorianCalendar();
-		dobEndValue.setTime(dobBeginDate);
-		dobEndValue.add(Calendar.YEAR, 1);
-		dobEndValue.add(Calendar.DAY_OF_YEAR, -1);
-		dobEndValue.set(Calendar.HOUR_OF_DAY, 23);
-		dobEndValue.set(Calendar.MINUTE, 59);
-		dobEndValue.set(Calendar.SECOND, 59);
-		Date dobEndDate = new Date(dobEndValue.getTimeInMillis());
+		Date dobDate = new Date(dobValue.getTimeInMillis());
+		GregorianCalendar dobPlusOneYearValue = new GregorianCalendar();
+		dobPlusOneYearValue.setTime(dobDate);
+		dobPlusOneYearValue.add(Calendar.YEAR, 1);
+		dobPlusOneYearValue.add(Calendar.DAY_OF_YEAR, -1);
+		dobPlusOneYearValue.set(Calendar.HOUR_OF_DAY, 23);
+		dobPlusOneYearValue.set(Calendar.MINUTE, 59);
+		dobPlusOneYearValue.set(Calendar.SECOND, 59);
+		Date dobPlusOneYearDate = new Date(dobPlusOneYearValue.getTimeInMillis());
 		GregorianCalendar baseDate = new GregorianCalendar();
 		baseDate.setTime(date.getValue());
 		baseDate.add(Calendar.YEAR, -age);
@@ -53,22 +53,26 @@ public class MemberAgeFilter implements MemberFilter {
 		Date compareDate = new Date(baseDate.getTimeInMillis());
 		switch (comparisonOp){
 			case LESS:
-				return dobBeginDate.after(compareDate);
+				return dobDate.after(compareDate);
 			case LESS_EQUAL:
-				return (dobBeginDate.after(compareDate) ||  dobBeginDate.equals(compareDate));
+				return (dobDate.after(compareDate) ||  dateInBirthYear(compareDate, dobDate, dobPlusOneYearDate));
 			case GREATER:
-				return dobBeginDate.before(compareDate);
+				return dobDate.before(compareDate);
 			case GREATER_EQUAL:
-				return (dobBeginDate.before(compareDate) ||  dobBeginDate.equals(compareDate));
+				return (dobDate.before(compareDate) ||  dateInBirthYear(compareDate, dobDate, dobPlusOneYearDate));
 			case EQUAL:
-				return ((dobBeginDate.before(compareDate) || dobBeginDate.equals(compareDate)) && 
-						(dobEndDate.after(compareDate) || dobEndDate.equals(compareDate)));
+				return dateInBirthYear(compareDate, dobDate, dobPlusOneYearDate);
 		}
 		return false;
 	}
 	
 	public PMDate getDate(){
 		return date;
+	}
+	
+	private boolean dateInBirthYear(Date compareDate, Date dob, Date dobPlusOneYear) {
+		return ((dob.before(compareDate) || dob.equals(compareDate)) && 
+				(dobPlusOneYear.after(compareDate) || dobPlusOneYear.equals(compareDate)));
 	}
 	
 	public Integer getAge(){
