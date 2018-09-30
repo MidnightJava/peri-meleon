@@ -1,6 +1,5 @@
 package com.tamelea.pm.data;
 
-import java.lang.reflect.Array;
 import java.util.stream.Stream;
 
 public class MemberNameFilter implements MemberFilter {
