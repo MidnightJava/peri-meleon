@@ -26,6 +26,7 @@ final class QueriesEdit {
 	private QueriesBirthdaysAction		queriesBirthdays;
 	private QueriesMemberStatusAction	queriesMemberStatus;
 	private QueriesMemberAgeAction		queriesMemberAge;
+	private QueriesMemberNameAction		queriesMemberName;
 	private QueriesStatisticalAction	queriesStatistical;
 	private QueriesBaptismsAction		queriesBaptisms;
 	private ActiveHouseholdsAction		activeHouseholds;
@@ -43,12 +44,14 @@ final class QueriesEdit {
 		queriesBirthdays = new QueriesBirthdaysAction();
 		queriesMemberStatus = new QueriesMemberStatusAction();
 		queriesMemberAge = new QueriesMemberAgeAction();
+		queriesMemberName = new QueriesMemberNameAction();
 		queriesStatistical = new QueriesStatisticalAction();
 		queriesBaptisms = new QueriesBaptismsAction();
 		activeHouseholds = new ActiveHouseholdsAction();
 		queriesMenu.add(queriesBirthdays);
 		queriesMenu.add(queriesMemberStatus);
 		queriesMenu.add(queriesMemberAge);
+		queriesMenu.add(queriesMemberName);
 		queriesMenu.add(queriesStatistical);
 		queriesMenu.add(queriesBaptisms);
 		queriesMenu.add(activeHouseholds);
@@ -160,6 +163,17 @@ final class QueriesEdit {
 		
 		public void actionPerformed(ActionEvent e) {
 			new AgeQueryDialog(data, view).setVisible(true);
+		}
+	}
+	
+	private final class QueriesMemberNameAction extends AbstractAction {
+
+	    public QueriesMemberNameAction() {
+			super("Members by Name...");
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			new NameQueryDialog(data, view).setVisible(true);
 		}
 	}
 	
