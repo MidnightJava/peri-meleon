@@ -1,5 +1,6 @@
 package com.tamelea.pm.data;
 
+import java.lang.reflect.Array;
 import java.util.stream.Stream;
 
 public class MemberNameFilter implements MemberFilter {
@@ -22,16 +23,15 @@ public class MemberNameFilter implements MemberFilter {
 		if (activeOnly){
 			if (!data.isActive(index)) return false;
 		}
-        PMString firstName = (PMString)data.getMemberValue(index, MemberField.FIRST_NAME);
-        PMString middleName = (PMString)data.getMemberValue(index, MemberField.MIDDLE_NAME);
-        PMString lastName = (PMString)data.getMemberValue(index, MemberField.LAST_NAME);
-        PMString nickName = (PMString)data.getMemberValue(index, MemberField.NICK_NAME);
+        PMString[] allNameFieldValues = new PMString[] {
+        		(PMString) data.getMemberValue(index, MemberField.FIRST_NAME),
+        		(PMString) data.getMemberValue(index, MemberField.MIDDLE_NAME),
+        		(PMString) data.getMemberValue(index, MemberField.LAST_NAME),
+        		(PMString) data.getMemberValue(index, MemberField.NICK_NAME)
+        };
         Boolean nameMatch = !nameSearch.isEmpty() && Stream.of(nameSearch.split("\\s+"))
         	.anyMatch(s ->
-        		s.toLowerCase().equals(firstName.toString().toLowerCase()) ||
-        		s.toLowerCase().equals(middleName.toString().toLowerCase()) ||
-        		s.toLowerCase().equals(lastName.toString().toLowerCase()) ||
-        		s.toLowerCase().equals(nickName.toString().toLowerCase())
+        		Stream.of(allNameFieldValues).anyMatch(s2 -> s2.toString().toLowerCase().equals(s.toLowerCase()))
         	);
         
         return nameMatch;
