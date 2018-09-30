@@ -25,13 +25,11 @@ implements PropertyChangeListener
 	private List<MemberIndex> filteredIndexesSortedByName;
 	private MemberStatus status;
 	private ResidenceSelector rs;
-	private String nameSearch;
 
-	public MembersByStatusTableModel(Data data, MemberStatus status, ResidenceSelector rs, String nameSearch) {
+	public MembersByStatusTableModel(Data data, MemberStatus status, ResidenceSelector rs) {
 		this.data = data;
 		this.status = status;
 		this.rs = rs;
-		this.nameSearch = nameSearch;
 		refreshData();
 		data.addPropertyChangeListener(this);
 	}
@@ -107,7 +105,7 @@ implements PropertyChangeListener
     
     private void refreshData() {
     	filteredIndexesSortedByName = data.queryMembers(
-    			new MemberStatusFilter(data, status, rs, nameSearch), 
+    			new MemberStatusFilter(data, status, rs), 
     			new DisplayNameComparator(data));
     	filteredSortedNames = data.listDisplayNames(filteredIndexesSortedByName);
 //    	HashMap<String,List<? extends Object>> namesAndIndexes = data.getMembersByStatus(status, rs);
