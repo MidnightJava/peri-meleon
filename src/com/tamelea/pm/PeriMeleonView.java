@@ -5,6 +5,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
+import java.awt.desktop.QuitResponse;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -176,7 +177,7 @@ final class PeriMeleonView extends View implements PropertyChangeListener {
 	protected void processWindowEvent(WindowEvent e) {
 		//super.processWindowEvent(e);
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			performExit();
+			performExit(null);
 		}
 	}
 	
@@ -269,7 +270,7 @@ final class PeriMeleonView extends View implements PropertyChangeListener {
 		}
 	}
 	
-	void performExit() {
+	void performExit(QuitResponse response) {
 	    Object[] dialogLabels = { "Discard changes and exit", "Cancel exit" };
 	    if (data.isSaveNeeded()) {
 			int choice = JOptionPane.showOptionDialog(this,
@@ -290,7 +291,11 @@ final class PeriMeleonView extends View implements PropertyChangeListener {
 	    PeriMeleon.getPreferences().put(PeriMeleon.PASSWORD, new String(password));
 	    File boundFile = data.getBoundFile();
 	    PeriMeleon.getPreferences().put(PeriMeleon.LAST_USED, (boundFile == null) ? "null" : boundFile.toString());
-	    System.exit(0);
+	    if (response != null) {
+	    	response.performQuit();
+	    } else {
+	    	System.exit(0);
+	    }
 	}
 
 	public JFileChooser getFileChooser() {

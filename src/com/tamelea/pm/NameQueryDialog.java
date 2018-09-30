@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import com.tamelea.pm.data.Data;
@@ -28,6 +29,8 @@ implements ActionListener{
 	private JCheckBox			activeOnly;
 	private Data				data;
 	private MemberNameFilter	filter;
+	private JRadioButton 		any;
+	private JRadioButton 		all;
 	
 	public NameQueryDialog(Data data, PeriMeleonView view){
 		super(view, "Find members by name", true);
@@ -50,14 +53,14 @@ implements ActionListener{
 		mainPane.add(Box.createVerticalStrut(10));
 			JPanel p1 = new JPanel();
 			p1.setLayout(new BoxLayout(p1, BoxLayout.X_AXIS));
-			p1.add(new JLabel("Find members whose name contains:"));
+			p1.add(new JLabel("Enter space-separated list of text strings to search for:"));
 			p1.add(Box.createHorizontalStrut(10));
 			p1.add(Box.createHorizontalGlue());
 		mainPane.add(p1);
 			JPanel p2 = new JPanel();
 			p2.setLayout(new BoxLayout(p2, BoxLayout.X_AXIS));
-			p2.add(Box.createHorizontalStrut(5));
 			p2.add(nameStringField);
+			p2.add(Box.createHorizontalGlue());
 		mainPane.add(p2);
 			JPanel p3 = new JPanel();
 			p3.setLayout(new BoxLayout(p3, BoxLayout.X_AXIS));

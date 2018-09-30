@@ -29,4 +29,5 @@ input
 
 #build files
 dist
-dmg
+build
+/bin/

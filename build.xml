@@ -1,142 +1,147 @@
-<!-- To build the app and create the disk image:
+<?xml version="1.0" encoding="UTF-8" ?>
 
-	1. Run the default task (copyDist), to create the app bundle in the dmg/ directory
-	2. Launch Disk Utility. Select "New Disk Image from Folder" and Navigate to the dmg/ directory. 
-	
-	Note: There is a symbolic link for /Applications inside the dmg/ dir. This is a convenience
-	for the user, enabling them to easily copy the app to the /Applications folder after opening
-	the disk image. If for some reason the dmg/ dir gets deleted (it's not deleted in the clean target),
-	it will be created by the init task, but the link should be re-created on the command line with
-	ln -s /Applications Applications
-	
-	Useful link on building Java apps for OSX
-	http://stackoverflow.com/questions/14806709/application-is-using-java-6-from-apple-instead-of-java-7-from-oracle-on-mac-os-x
--->
+<!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-<project name="Members" default="copyDist" basedir=".">
-	<description>
-		Members compile and distribution
-	</description>
-	<property name="app_version" value="1.4.1" />
-	<property name="src" location="src" />
-	<property name="build" location="classes" />
+USAGE: ant [-Dbundles=(image | dmg | pkg | all)]
+
+image (default):	Build a .app bundle
+dmg:				Build a .dmg file containing the .app bundle
+pkg:				Build a .pkg executable that installs the .app bundle
+all:				Build all of the above
+
+Build products can be found in build/bundles.
+
+Notes:
+
+- Currently requires Oracle Java 1.8 update 162 or higher (with earlier 1.8
+  versions, bughttps://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758
+  causes a failure while building the .dmg file.
+
+- Java 10 will be suported after the deprecated com.apple.eaws clasess are
+  replaced by java.awt.desktop equivalents. These classes were moved from
+  ui.jar to rt.jar in JDK 8, and were removed entirely in JDK 9+
+  
+- Java 11 is currently not supported, since the ant-javafx.jar file which
+  provides the ant tasks is not currently available.
+  
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+<!-- For java 8, update 162 or higher is required when building dmg files
+see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
+ 
+<project name="PeriMelon Application" default="default" basedir="."
+  xmlns:fx="javafx:com.sun.javafx.tools.ant">
+ 
+	<property name="app_version" value="1.4.2" />
 	<property name="lib" location="lib" />
-	<property name="dist" location="dist" />
-	<property name="rsrc" location="resource" />
-	<property name="dmg" location="dmg" />
-	<property name="app_contents"
-		location="${dmg}/Peri Meleon.app/Contents" />
-	<property name="app_java" location="${app_contents}/Java" />
-	<property name="app_lib" location="${app_contents}/lib" />
-	<property name="app_resources" location="${app_contents}/Resources" />
-	<property name="app_java_resource" location="${app_java}/resource" />
-	<property name="icons" location="icons" />
+	<property environment="env" />
+  	<property name="build.src.dir" value="src"/>
+  	<property name="build.classes.dir" value="classes"/>
+	<property name="build.bundles.dir" value="build/bundles"/>
+	<property name="jdk.version" value="10" />
+	<property name="app.jre.version" value="1.8" />
+  	<property name="build.dist.dir" value="dist"/>
+  	<property name="build.out.dir" value="build"/>
+	<property name="default.native.bundles" value="image" />
+	
+	<exec executable="/usr/libexec/java_home" outputproperty="JAVA_HOME" resultproperty="exec.result">
+		<arg line="-v ${jdk.version} -F" />
+	</exec>
+	<fail message="This script requires JDK version ${jdk.version}, and it is not installed">
+		<condition>
+			<isfailure code="${exec.result}" />
+		</condition>
+	</fail>
+	
+	<echo message="JAVA HOME: ${JAVA_HOME}" />
 
-	<!-- appbundler help: http://docs.oracle.com/javase/7/docs/technotes/guides/jweb/packagingAppsForMac.html -->
-	<taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask"
-		classpath="appbundler-1.0.jar" />
-	<target name="init">
-		<!-- Create the time stamp -->
-		<tstamp />
-	</target>
-
-	<target name="compile" depends="init" description="compile the source">
-		<mkdir dir="${build}" />
-		<!-- code built for 1.5, but compile against version of running JVM to avoid possible runtime problems -->
-		<javac srcdir="${src}" destdir="${build}" source="1.7" target="1.7"
-			includeantruntime="false">
-
-			<classpath>
-				<pathelement location="${lib}/dom4j-1.6.1.jar" />
-				<pathelement location="${lib}/jh.jar" />
-				<pathelement location="${lib}/xercesImpl-2.7.1.jar" />
-				<pathelement location="${lib}/xml-apis-1.3.02.jar" />
-				<pathelement location="${lib}/ui.jar" />
-				<pathelement location="${lib}/xmlgraphics-commons-1.2.jar" />
-				<pathelement location="${lib}/xalan-2.7.0.jar" />
-				<pathelement location="${lib}/serializer-2.7.0.jar" />
-				<pathelement location="${lib}/fop.jar" />
-				<pathelement location="${lib}/commons-logging-1.0.4.jar" />
-				<pathelement location="${lib}/commons-io-1.3.1.jar" />
-				<pathelement location="${lib}/batik-all-1.6.jar" />
-				<pathelement location="${lib}/avalon-framework-4.2.0.jar" />
-			</classpath>
-
-		</javac>
-		<!-- Copy resource files from source to build directory -->
-		<copy todir="${build}">
-			<fileset dir="${src}">
-				<include name="com/**/*" />
-				<include name="help/**/*" />
-				<exclude name="**/.svn/*" />
-				<exclude name="**/*.java" />
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="dist" depends="compile" description="generate the distribution">
-		<!-- Create the distribution directory -->
-		<mkdir dir="${dist}" />
-		<mkdir dir="${dmg}" />
-
-		<!-- Create jar file -->
-		<jar jarfile="${dist}/members.jar" basedir="${build}" manifest="members.mf"
-			includes="com/** help/** resource/*" />
-	</target>
-
-	<target name="create-app-bundle" depends="dist">
-		<bundleapp outputdirectory="${dmg}" name="Peri Meleon" displayname="Peri Meleon"
-			icon="icons/PM.icns" identifier="com.tamelea.perimeleon"
-			shortversion="${app_version}" signature="PMLN"
-			mainclassname="com.tamelea.pm.PeriMeleon">
-			<classpath file="dist/members.jar" />
-		</bundleapp>
-	</target>
-
-	<target name="copyDist" depends="create-app-bundle">
-		<copy toDir="${app_java}" file="${dist}/members.jar" />
-		<copy toDir="${app_lib}">
-			<fileset dir="${lib}" />
-		</copy>
-		<copy toDir="${app_resources}">
-			<fileset dir="${icons}">
-				<!-- Icon for files of type .per -->
-				<include name="PM Doc.icns" />
-			</fileset>
-		</copy>
-		<replace file="${app_contents}/Info.plist">
-			<replacetoken><![CDATA[<key>CFBundleDevelopmentRegion</key>
-<string>English</string>]]></replacetoken>
-			<replacevalue><![CDATA[<key>CFBundleDevelopmentRegion</key>
-<string>English</string>
-<key>CFBundleDocumentTypes</key>
-<array>
-	<dict> 
-		<key>CFBundleTypeExtensions</key> 
-		<array>
-			<string>per</string>
-		</array>
-		<key>CFBundleTypeIconFile</key>
-		<string>PM Doc.icns</string>
-		<key>CFBundleTypeName</key>
-		<string>com.tamelea.pmDocumentType</string> 
-		<key>CFBundleTypeOSTypes</key>
-		<array>
-			<string>PMLD</string>
-		</array>
-		<key>CFBundleTypeRole</key> 
-		<string>Editor</string>
-	</dict>
-</array>
-<key>JVMVersion</key>
-<string>1.7+</string>]]></replacevalue>
-		</replace>
-	</target>
-
-	<target name="clean" description="clean up">
-		<!-- IMPORTANT There is a sym link to /Applications in dmg! DO NOT DELETE 
-			THE ENTIRE DIRECTORY! -->
-		<delete dir="${dmg}/Peri Meleon.app" />
-		<delete dir="${build}" />
-	</target>
+  	<path id="app.classpath">
+		<fileset dir="${lib}">
+			<include name="*.jar" />
+			<include name="*.txt" />
+		</fileset>
+		<pathelement path="classes"/>
+  	</path>
+	
+	<condition property="native.bundles" value="${bundles}" else="${default.native.bundles}">
+			<isset property="bundles" />
+	</condition>
+ 
+  <target name="default" depends="clean,compile">
+ 
+    <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+      uri="javafx:com.sun.javafx.tools.ant"
+      classpath=".:./package/macosx:${JAVA_HOME}:${JAVA_HOME}/lib/ant-javafx.jar"/>
+ 
+	 <fx:application id="perimeleon"
+	    name="Peri Meleon"
+		version="${app_version}"
+	    mainClass="com.tamelea.pm.PeriMeleon" />
+ 
+     <fx:resources id="appRes">
+        <fx:fileset dir="${build.dist.dir}" includes="members.jar"/>
+	 	<fx:fileset dir="." type="jar" includes="lib/*.jar" />
+        <fx:fileset dir="." type="data" includes="lib/*.txt" />
+     	<fx:fileset dir="." includes="signing-cert.p12" />
+     </fx:resources>
+ 
+  	<fx:jar destfile="${build.dist.dir}/members.jar" >
+    	<fx:application refid="perimeleon"/>
+  		<fx:resources refid="appRes" />
+  		<fx:fileset dir="${build.classes.dir}"/>
+  	</fx:jar>
+ 
+  	<fx:deploy outdir="${basedir}/${build.out.dir}"
+  		verbose="true"
+  		embedjnlp="false"
+	    outfile="permimeleon"
+  		signBundle="true"
+	    nativeBundles="${native.bundles}">
+	    <fx:platform j2se="${app.jre.version}"/>
+	    <fx:application refId="perimeleon"/>
+		<fx:resources refId="appRes" />
+	    <fx:info title="Peri Meleon" />
+  		<fx:bundleArgument arg="mac.signing-key-developer-id-app" value="./signing-cert.p12"/>
+  		<fx:bundleArgument arg="mac.signing-key-user-name" value="TyndaleSoft LLC"/>
+   </fx:deploy>
+ 
+  </target>
+ 
+  <target name="clean">
+    <mkdir dir="${build.classes.dir}"/>
+    <mkdir dir="${build.dist.dir}"/>
+ 
+    <delete>
+      	<fileset dir="${build.classes.dir}" includes="**/*"/>
+      	<fileset dir="${build.dist.dir}" includes="**/*"/>
+    </delete>
+  	
+  	<delete dir="${build.bundles.dir}" />
+ 
+  </target>
+ 
+  <target name="compile" depends="clean">
+ 
+    <javac includeantruntime="false"
+      includeJavaRuntime="true"
+      srcdir="${build.src.dir}"
+      destdir="${build.classes.dir}"
+      fork="yes"
+      executable="${JAVA_HOME}/bin/javac"
+      source="1.8"
+      debug="on"
+      classpathref="app.classpath">
+    </javac>
+  	
+  	<copy todir="${build.classes.dir}">
+		<fileset dir="${build.src.dir}">
+			<include name="com/**/*" />
+			<include name="help/**/*" />
+			<exclude name="**/.svn/*" />
+			<exclude name="**/*.java" />
+		</fileset>
+	</copy>
+    
+  </target>
+ 
 </project>
