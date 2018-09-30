@@ -21,9 +21,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 
 import com.tamelea.pm.data.Data;
-import com.tamelea.pm.data.MemberAgeFilter;
 import com.tamelea.pm.data.MemberNameFilter;
-import com.tamelea.pm.data.MembersByAgeTableModel;
 import com.tamelea.pm.data.MembersByNameTableModel;
 
 @SuppressWarnings("serial")
