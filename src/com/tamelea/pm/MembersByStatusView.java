@@ -37,7 +37,7 @@ public final class MembersByStatusView extends View {
 	private PeriMeleonView				membersView;
 	private JMenuBar					menuBar;
 	
-	MembersByStatusView(Data data, PeriMeleonView membersView, MemberStatus status, ResidenceSelector rs, String nameSearch) {
+	MembersByStatusView(Data data, PeriMeleonView membersView, MemberStatus status, ResidenceSelector rs) {
 		super(status.toString());
 		this.data = data;
 		this.membersView = membersView;
@@ -46,7 +46,7 @@ public final class MembersByStatusView extends View {
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		setTitle(status.toString() + " Members " + 
 				(rs == ResidenceSelector.BOTH ?"Including " : "Who Are  ") + rs.toString());
-		tableModel = new MembersByStatusTableModel(data, status, rs, nameSearch);
+		tableModel = new MembersByStatusTableModel(data, status, rs);
 		table = new PMTable(tableModel);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
