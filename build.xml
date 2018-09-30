@@ -100,7 +100,6 @@ see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
 	    <fx:application refId="perimeleon"/>
 		<fx:resources refId="appRes" />
 	    <fx:info title="Peri Meleon" />
-  		
    </fx:deploy>
  
   </target>

@@ -10,6 +10,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.Date;
 
 import javax.crypto.Cipher;
@@ -25,7 +31,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.dom4j.DocumentException;
 
-import com.apple.eio.FileManager;
 import com.tamelea.pm.data.Data;
 import com.tamelea.pm.data.PhoneListMaker;
 import com.tamelea.pm.nhpc.NHPCImportException;
@@ -413,8 +418,15 @@ final class FileEdit {
 			if (PeriMeleon.getOSName() == OSName.MAC){
 				final String CREATOR_CODE = "504D4C4E";//ASCII PMLN
 				final String FILE_TYPE_CODE = "504D4C44";//ASCII PMLD
-				FileManager.setFileCreator(file.getCanonicalPath(), Integer.parseInt(CREATOR_CODE, 16));
-				FileManager.setFileType(file.getCanonicalPath(), Integer.parseInt(FILE_TYPE_CODE, 16));
+//				FileManager.setFileCreator(file.getCanonicalPath(), Integer.parseInt(CREATOR_CODE, 16));
+//				FileManager.setFileType(file.getCanonicalPath(), Integer.parseInt(FILE_TYPE_CODE, 16));
+				Files.setAttribute(Paths.get(file.getCanonicalPath()), "user:kMDItemKind", "com.tamelea.pmDocumentType");
+				Files.setAttribute(Paths.get(file.getCanonicalPath()), "user:kMDItemFSTypeCode", "PMLD");
+				
+//				UserDefinedFileAttributeView view = Files
+//					    .getFileAttributeView(Paths.get(file.getCanonicalPath()), UserDefinedFileAttributeView.class);
+//				view.write("kMDItemKind", Charset.defaultCharset().encode("com.tamelea.pmDocumentType"));
+//				view.write("kMDItemFSTypeCode", Charset.defaultCharset().encode("PMLD"));
 			}
 			
 		}
@@ -637,7 +649,7 @@ final class FileEdit {
 		}
 		
 		public void actionPerformed(ActionEvent e) {
-			view.performExit();
+			view.performExit(null);
 		}
 	}
 }
