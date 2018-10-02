@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -13,6 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import com.tamelea.pm.data.Data;
@@ -28,6 +30,8 @@ implements ActionListener{
 	private JCheckBox			activeOnly;
 	private Data				data;
 	private MemberNameFilter	filter;
+	private JRadioButton 		any;
+	private JRadioButton 		all;
 	
 	public NameQueryDialog(Data data, PeriMeleonView view){
 		super(view, "Find members by name", true);
@@ -56,22 +60,38 @@ implements ActionListener{
 		mainPane.add(p1);
 			JPanel p2 = new JPanel();
 			p2.setLayout(new BoxLayout(p2, BoxLayout.X_AXIS));
-			p2.add(Box.createHorizontalStrut(5));
 			p2.add(nameStringField);
+			p2.add(Box.createHorizontalGlue());
 		mainPane.add(p2);
 			JPanel p3 = new JPanel();
 			p3.setLayout(new BoxLayout(p3, BoxLayout.X_AXIS));
-			p3.add(new JLabel("Sort results by"));
-			p3.add(Box.createHorizontalStrut(5));
-			p3.add(sortFieldChoices);
+			p3.add(new JLabel("Match:"));
+			any = new JRadioButton("any", true);
+			all = new JRadioButton("all");
+			ButtonGroup group = new ButtonGroup();
+			group.add(any);
+			group.add(all);
+			p3.add(Box.createHorizontalStrut(1));
+			p3.add(any);
+			p3.add(Box.createHorizontalStrut(1));
+			p3.add(all);
+			p3.add(Box.createHorizontalStrut(10));
+			p3.add(new JLabel("words"));
 			p3.add(Box.createHorizontalGlue());
-		mainPane.add(Box.createVerticalStrut(10));
 		mainPane.add(p3);
 			JPanel p4 = new JPanel();
 			p4.setLayout(new BoxLayout(p4, BoxLayout.X_AXIS));
-			p4.add(activeOnly);
+			p4.add(new JLabel("Sort results by"));
+			p4.add(Box.createHorizontalStrut(5));
+			p4.add(sortFieldChoices);
 			p4.add(Box.createHorizontalGlue());
-			mainPane.add(p4);
+		mainPane.add(Box.createVerticalStrut(10));
+		mainPane.add(p4);
+			JPanel p5 = new JPanel();
+			p5.setLayout(new BoxLayout(p5, BoxLayout.X_AXIS));
+			p5.add(activeOnly);
+			p5.add(Box.createHorizontalGlue());
+			mainPane.add(p5);
 			JPanel buttonPanel = new JPanel();
 			buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.X_AXIS));
 			buttonPanel.add(executeButton);
@@ -99,7 +119,7 @@ implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("execute")){
 			String nameString = nameStringField.getText();
-			filter = new MemberNameFilter(data, nameString, activeOnly.isSelected());
+			filter = new MemberNameFilter(data, nameString, activeOnly.isSelected(), any.isSelected());
 			String sortFieldName = (String)sortFieldChoices.getSelectedItem();
 			dispose();
 			membersView.launchView(MembersByNameView.class, data, membersView, sortFieldName, filter);
