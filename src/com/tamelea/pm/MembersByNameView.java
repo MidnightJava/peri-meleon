@@ -41,7 +41,7 @@ public final class MembersByNameView extends View {
 		this.setIconImage(Toolkit.getDefaultToolkit().createImage(
         com.tamelea.pm.PeriMeleonView.class.getResource("icon16.gif")));
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-		setTitle("Members whose name contains " + (filter.getMatchAny() ? " any " : " all ") + "of the words \"" +
+		setTitle("Members whose name contains any of the words \"" +
 				filter.getNameSearch().trim().replaceAll("\\s+", ", ") + "\"");
 		table = new PMTable();
 		tableModel = new MembersByNameTableModel(table, data, sortFieldName, filter);
