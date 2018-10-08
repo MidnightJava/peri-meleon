@@ -29,4 +29,6 @@ input
 
 #build files
 dist
+classes
 build
+bin
