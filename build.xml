@@ -42,16 +42,20 @@ see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
   	<property name="build.dist.dir" value="dist"/>
 	<property name="default.native.bundles" value="image" />
 	
-	<fail message="Environment variable JAVA_HOME must be set">
+	<exec executable="/usr/libexec/java_home" outputproperty="JAVA_HOME" resultproperty="exec.result">
+		<arg line="-v ${jdk.version} -F" />
+	</exec>
+	<fail message="This script requires JDK version ${jdk.version}, and it is not installed">
 		<condition>
-			<not>
-				<isset property="env.JAVA_HOME"/>
-			</not>
+			<isfailure code="${exec.result}" />
 		</condition>
 	</fail>
 	
+	<echo message="JAVA HOME: ${JAVA_HOME}" />
+
+	
   	<path id="boot.classpath">
-		<pathelement location="${env.JAVA_HOME}/jre/lib/rt.jar"/>
+		<pathelement location="${JAVA_HOME}/jre/lib/rt.jar"/>
   	</path>
   	<path id="app.classpath">
 		<fileset dir="${lib}">
@@ -69,7 +73,7 @@ see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
  
     <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
       uri="javafx:com.sun.javafx.tools.ant"
-      classpath=".:./package/macosx:${env.JAVA_HOME}/lib/ant-javafx.jar"/>
+      classpath=".:./package/macosx:${JAVA_HOME}:${JAVA_HOME}/lib/ant-javafx.jar"/>
  
 	 <fx:application id="perimeleon"
 	    name="Peri Meleon"
@@ -92,7 +96,7 @@ see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
   		embedJNLP="false"
 	    outfile="permimeleon"
 	    nativeBundles="${native.bundles}">
-	    <fx:platform basedir="${env.JAVA_HOME}"/>
+	    <fx:platform basedir="${JAVA_HOME}"/>
 	    <fx:application refId="perimeleon"/>
 		<fx:resources refId="appRes" />
 	    <fx:info title="Peri Meleon" />
@@ -121,7 +125,7 @@ see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
       srcdir="${build.src.dir}"
       destdir="${build.classes.dir}"
       fork="yes"
-      executable="${env.JAVA_HOME}/bin/javac"
+      executable="${JAVA_HOME}/bin/javac"
       source="1.8"
       debug="on"
       classpathref="app.classpath"
