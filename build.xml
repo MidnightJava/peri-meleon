@@ -36,9 +36,9 @@ Notes:
 	<property name="default.native.bundles" value="image" />
 	
 	<exec executable="/usr/libexec/java_home" outputproperty="JAVA_HOME" resultproperty="exec.result">
-		<arg line="-v ${build.jdk.version} -F" />
+		<arg line="-v ${jdk.version} -F" />
 	</exec>
-	<fail message="This script requires JDK version ${build.jdk.version}, and it is not installed">
+	<fail message="This script requires JDK version ${jdk.version}, and it is not installed">
 		<condition>
 			<isfailure code="${exec.result}" />
 		</condition>
