@@ -31,16 +31,15 @@ Notes:
   	<property name="build.src.dir" value="src"/>
   	<property name="build.classes.dir" value="classes"/>
 	<property name="build.bundles.dir" value="build/bundles"/>
-	<property name="build.jdk.version" value="10" />
-	<property name="app.jre.version" value="1.8" />
+	<property name="jdk.version" value="10" />
   	<property name="build.dist.dir" value="dist"/>
   	<property name="build.out.dir" value="build"/>
 	<property name="default.native.bundles" value="image" />
 	
 	<exec executable="/usr/libexec/java_home" outputproperty="JAVA_HOME" resultproperty="exec.result">
-		<arg line="-v ${build.jdk.version} -F" />
+		<arg line="-v ${jdk.version} -F" />
 	</exec>
-	<fail message="This script requires JDK version ${build.jdk.version}, and it is not installed">
+	<fail message="This script requires JDK version ${jdk.version}, and it is not installed">
 		<condition>
 			<isfailure code="${exec.result}" />
 		</condition>
@@ -89,7 +88,7 @@ Notes:
 	    outfile="permimeleon"
   		signBundle="true"
 	    nativeBundles="${native.bundles}">
-	    <fx:platform j2se="${app.jre.version}"/>
+	    <fx:platform j2se="${jdk.version}"/>
 	    <fx:application refId="perimeleon"/>
 		<fx:resources refId="appRes" />
 	    <fx:info title="Peri Meleon" />
