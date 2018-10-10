@@ -17,6 +17,8 @@ import javax.swing.JWindow;
 @SuppressWarnings("serial")
 public final class Splash extends JWindow {
 	private final Color background = new Color(225, 190, 105);
+	
+	public static Splash INSTANCE;
 
 	  public Splash()
 	  {
@@ -59,5 +61,6 @@ public final class Splash extends JWindow {
 	    });
 	    setAlwaysOnTop(true);
 	    setVisible(true);
+	    INSTANCE = this;
 	  }
 	}
