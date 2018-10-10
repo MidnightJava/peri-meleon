@@ -10,18 +10,13 @@ import java.awt.desktop.QuitHandler;
 import java.awt.desktop.QuitResponse;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
 import javax.swing.SwingUtilities;
-//
-//import com.apple.eawt.Application;
-//import com.apple.eawt.ApplicationAdapter;
-//import com.apple.eawt.ApplicationEvent;
-//import com.sun.java.swing.action.AboutAction;
+
 import com.tamelea.pm.data.Data;
 
 public final class PeriMeleon {
@@ -91,7 +86,6 @@ public final class PeriMeleon {
 	
 	private void setPlatformSpecificFeatures(){
 		if (PeriMeleon.getOSName() == OSName.MAC) {   
-//			new MacOSHandler();
 			setupDesktop();
 	    } else if (PeriMeleon.getOSName() == OSName.WINDOWS){
 	    	if (openDocName != null){
@@ -129,53 +123,15 @@ public final class PeriMeleon {
 					try {
 						openFileList.add(files.get(0).getCanonicalPath());
 					} catch (IOException e1) {
-						//TODO Handle error
+						// PASS
+						// Not likely to occur, and not worth bothering the user if it does
 					}
 	            	view.checkForOpenDocEventFile();
 				}
 			}
 		});
 	}
-	
-//	private class MacOSHandler extends Application{
-//		
-//		
-//		
-//		@SuppressWarnings("deprecation")
-//		private MacOSHandler() {
-//			super();
-//			addApplicationListener(new AboutBoxHandler());
-//			addApplicationListener(new QuitBoxHandler());
-//			addApplicationListener(new OpenDocumentHandler());
-//	    }
-//		
-//		class AboutBoxHandler extends ApplicationAdapter {
-//	        public void handleAbout(ApplicationEvent event) {
-//	        	event.setHandled(true);
-//	            new Splash();
-//	        }
-//	    }
-//		class QuitBoxHandler extends ApplicationAdapter {
-//	        public void handleQuit(ApplicationEvent event) {
-//	            view.performExit();
-//	        }
-//	    }
-//		
-//		class OpenDocumentHandler extends ApplicationAdapter{
-//			public void handleOpenFile(ApplicationEvent event) {	
-//	            try {
-//	            	openFileList.add(new File(event.getFilename()).getCanonicalPath());
-//	            	view.checkForOpenDocEventFile();
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				} finally {
-//					event.setHandled(true);
-//				}
-//	            
-//	        }
-//		}
-//	}
+
 	
 	public  List<String> getOpenFileList(){
 		return openFileList;
