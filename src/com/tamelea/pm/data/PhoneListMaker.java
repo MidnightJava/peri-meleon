@@ -27,14 +27,14 @@ public final class PhoneListMaker {
 			new Field(AddressField.ADDRESS_2,	"Home Street 2"),
 			new Field(AddressField.CITY,		"Home City"),
 			new Field(AddressField.STATE,		"Home State"),
-			new Field(AddressField.POSTAL_CODE,	"Home Postal Code"),
+			new Field(AddressField.POSTAL_CODE,	"Home ZIP"),
 			new Field(AddressField.COUNTRY,		"Home Country"),
 			new Field(AddressField.HOME_PHONE,	"Home Phone"),
-			new Field(MemberField.EMAIL,		"E-mail Address"),
-			new Field(MemberField.WORK_EMAIL,	"E-mail 2 Address"),
-			new Field(MemberField.MOBILE_PHONE,	"Mobile Phone"),
-			new Field(MemberField.WORK_PHONE,	"Business Phone"),
-			new Field(ComputedField.CATEGORIES,	"Categories"),
+			new Field(MemberField.EMAIL,		"Email (home)"),
+			new Field(MemberField.WORK_EMAIL,	"Email (work)"),
+			new Field(MemberField.MOBILE_PHONE,	"Phone (mobile)"),
+			new Field(MemberField.WORK_PHONE,	"Phone (other)"),
+			new Field(ComputedField.CATEGORIES,	"Note"),
 		};
 	}
 	
