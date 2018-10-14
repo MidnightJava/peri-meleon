@@ -2,7 +2,7 @@
 
 <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-USAGE: ant [-Dbundles=(image | dmg | pkg | installer | all)]
+USAGE: ant [-Dbundles=(image | dmg | pkg | installer | all)] [-Dcleanbuild=<anyvalue>]
 
 image (default):	Build a .app bundle
 dmg:				Build a .dmg file containing the .app bundle
@@ -10,6 +10,8 @@ pkg:				Build a .pkg executable that installs the .app bundle
 installer:			Build a .dmg and a .pkg file
 all:				Build all of the above, plus launchable jar file. The
 					pkg build will not succeed with this option
+					
+Property cleanbuild will cause the build directory to be deleted.
 
 Build products can be found in build/.
 
@@ -27,10 +29,8 @@ Notes:
  
 	<property name="app_version" value="1.4.2" />
 	<property name="lib" location="lib" />
-	<property environment="env" />
   	<property name="build.src.dir" value="src"/>
   	<property name="build.classes.dir" value="classes"/>
-	<property name="build.bundles.dir" value="build/bundles"/>
 	<property name="jdk.version" value="10" />
   	<property name="build.dist.dir" value="dist"/>
 	<property name="build.out.dir" value="build"/>
@@ -96,8 +96,15 @@ Notes:
    </fx:deploy>
  
   </target>
+	
+	<target name="clean-build-dir" if="${cleanbuild}">
+		<delete includeemptydirs="true" removeNotFollowedSymlinks="true">
+			<!-- TIL that MacOS app bundles are impervious to ant delete tasks -->
+			<fileset dir="${build.out.dir}" includes="**/*"/>
+		</delete>
+	</target>
  
-  <target name="clean">
+  <target name="clean" depends="clean-build-dir">
     <mkdir dir="${build.classes.dir}"/>
     <mkdir dir="${build.dist.dir}"/>
   	<mkdir dir="${build.out.dir}"/>
@@ -105,8 +112,6 @@ Notes:
     <delete includeemptydirs="true" removeNotFollowedSymlinks="true">
       	<fileset dir="${build.classes.dir}" includes="**/*"/>
       	<fileset dir="${build.dist.dir}" includes="**/*"/>
-    	<!-- TIL that MacOS app bundles are impervious to ant delete tasks -->
-    	<fileset dir="${build.out.dir}" includes="**/*"/>
     </delete>
   	
   </target>
@@ -119,7 +124,7 @@ Notes:
       destdir="${build.classes.dir}"
       fork="yes"
       executable="${JAVA_HOME}/bin/javac"
-      source="1.8"
+      source="${jdk.version}"
       debug="on"
       classpathref="app.classpath">
     </javac>
