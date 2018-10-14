@@ -31,8 +31,9 @@ Notes:
   	<property name="build.src.dir" value="src"/>
   	<property name="build.classes.dir" value="classes"/>
 	<property name="build.bundles.dir" value="build/bundles"/>
-	<property name="jdk.version" value="1.8" />
+	<property name="jdk.version" value="10" />
   	<property name="build.dist.dir" value="dist"/>
+	<property name="build.out.dir" value="build"/>
 	<property name="default.native.bundles" value="image" />
 	
 	<exec executable="/usr/libexec/java_home" outputproperty="JAVA_HOME" resultproperty="exec.result">
@@ -46,10 +47,6 @@ Notes:
 	
 	<echo message="JAVA HOME: ${JAVA_HOME}" />
 
-	
-  	<path id="boot.classpath">
-		<pathelement location="${JAVA_HOME}/jre/lib/rt.jar"/>
-  	</path>
   	<path id="app.classpath">
 		<fileset dir="${lib}">
 			<include name="*.jar" />
@@ -85,14 +82,17 @@ Notes:
   		<fx:fileset dir="${build.classes.dir}"/>
   	</fx:jar>
  
-  	<fx:deploy outdir="build" verbose="true"
-  		embedJNLP="false"
+  	<fx:deploy outdir="${basedir}/${build.out.dir}"
+        verbose="false"
+  	    embedjnlp="false"
 	    outfile="permimeleon"
+  		signBundle="true"
 	    nativeBundles="${native.bundles}">
-	    <fx:platform basedir="${JAVA_HOME}"/>
+	    <fx:platform j2se="${jdk.version}"/>
 	    <fx:application refId="perimeleon"/>
 		<fx:resources refId="appRes" />
 	    <fx:info title="Peri Meleon" />
+  		<fx:bundleArgument arg="mac.signing-key-developer-id-app" value="iPhone Distribution: TyndaleSoft LLC (7LKQP3MSCV)"/>
    </fx:deploy>
  
   </target>
@@ -121,8 +121,7 @@ Notes:
       executable="${JAVA_HOME}/bin/javac"
       source="1.8"
       debug="on"
-      classpathref="app.classpath"
-      bootclasspathref="boot.classpath">
+      classpathref="app.classpath">
     </javac>
   	
   	<copy todir="${build.classes.dir}">
