@@ -2,32 +2,25 @@
 
 <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-USAGE: ant [-Dbundles=(image | dmg | pkg | all)]
+USAGE: ant [-Dbundles=(image | dmg | pkg | installer | all)]
 
 image (default):	Build a .app bundle
 dmg:				Build a .dmg file containing the .app bundle
 pkg:				Build a .pkg executable that installs the .app bundle
-all:				Build all of the above
+installer:			Build a .dmg and a .pkg file
+all:				Build all of the above, plus launchable jar file. The
+					pkg build will not succeed with this option
 
-Build products can be found in build/bundles.
+Build products can be found in build/.
 
 Notes:
 
-- Currently requires Oracle Java 1.8 update 162 or higher (with earlier 1.8
-  versions, bughttps://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758
-  causes a failure while building the .dmg file.
-
-- Java 10 will be suported after the deprecated com.apple.eaws clasess are
-  replaced by java.awt.desktop equivalents. These classes were moved from
-  ui.jar to rt.jar in JDK 8, and were removed entirely in JDK 9+
-  
-- Java 11 is currently not supported, since the ant-javafx.jar file which
-  provides the ant tasks is not currently available.
+- Java 10 is required, because:
+	* Java 8 does not have java.desktop classes.	
+	* Java 9 is beyond End of Life.
+	* In the Java 11 JDK, the ant-javafx.jar file which provides the ant tasks is not currently available.
   
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-
-<!-- For java 8, update 162 or higher is required when building dmg files
-see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
  
 <project name="PeriMelon Application" default="default" basedir="."
   xmlns:fx="javafx:com.sun.javafx.tools.ant">
@@ -38,8 +31,9 @@ see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
   	<property name="build.src.dir" value="src"/>
   	<property name="build.classes.dir" value="classes"/>
 	<property name="build.bundles.dir" value="build/bundles"/>
-	<property name="jdk.version" value="1.8" />
+	<property name="jdk.version" value="10" />
   	<property name="build.dist.dir" value="dist"/>
+	<property name="build.out.dir" value="build"/>
 	<property name="default.native.bundles" value="image" />
 	
 	<exec executable="/usr/libexec/java_home" outputproperty="JAVA_HOME" resultproperty="exec.result">
@@ -53,10 +47,6 @@ see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
 	
 	<echo message="JAVA HOME: ${JAVA_HOME}" />
 
-	
-  	<path id="boot.classpath">
-		<pathelement location="${JAVA_HOME}/jre/lib/rt.jar"/>
-  	</path>
   	<path id="app.classpath">
 		<fileset dir="${lib}">
 			<include name="*.jar" />
@@ -92,15 +82,17 @@ see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
   		<fx:fileset dir="${build.classes.dir}"/>
   	</fx:jar>
  
-  	<fx:deploy outdir="build" verbose="true"
-  		embedJNLP="false"
+  	<fx:deploy outdir="${basedir}/${build.out.dir}"
+        verbose="false"
+  	    embedjnlp="false"
 	    outfile="permimeleon"
+  		signBundle="true"
 	    nativeBundles="${native.bundles}">
-	    <fx:platform basedir="${JAVA_HOME}"/>
+	    <fx:platform j2se="${jdk.version}"/>
 	    <fx:application refId="perimeleon"/>
 		<fx:resources refId="appRes" />
 	    <fx:info title="Peri Meleon" />
-  		
+  		<fx:bundleArgument arg="mac.signing-key-developer-id-app" value="iPhone Distribution: TyndaleSoft LLC (7LKQP3MSCV)"/>
    </fx:deploy>
  
   </target>
@@ -108,14 +100,15 @@ see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
   <target name="clean">
     <mkdir dir="${build.classes.dir}"/>
     <mkdir dir="${build.dist.dir}"/>
+  	<mkdir dir="${build.out.dir}"/>
  
-    <delete>
+    <delete includeemptydirs="true" removeNotFollowedSymlinks="true">
       	<fileset dir="${build.classes.dir}" includes="**/*"/>
       	<fileset dir="${build.dist.dir}" includes="**/*"/>
+    	<!-- TIL that MacOS app bundles are impervious to ant delete tasks -->
+    	<fileset dir="${build.out.dir}" includes="**/*"/>
     </delete>
   	
-  	<delete dir="${build.bundles.dir}" />
- 
   </target>
  
   <target name="compile" depends="clean">
@@ -128,8 +121,7 @@ see https://bugs.java.com/bugdatabase/view_bug.do?bug_id=8190758 -->
       executable="${JAVA_HOME}/bin/javac"
       source="1.8"
       debug="on"
-      classpathref="app.classpath"
-      bootclasspathref="boot.classpath">
+      classpathref="app.classpath">
     </javac>
   	
   	<copy todir="${build.classes.dir}">

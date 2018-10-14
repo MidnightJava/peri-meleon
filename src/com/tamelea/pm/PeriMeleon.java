@@ -1,5 +1,13 @@
 package com.tamelea.pm;
 
+import java.awt.Desktop;
+import java.awt.desktop.AboutEvent;
+import java.awt.desktop.AboutHandler;
+import java.awt.desktop.OpenFilesEvent;
+import java.awt.desktop.OpenFilesHandler;
+import java.awt.desktop.QuitEvent;
+import java.awt.desktop.QuitHandler;
+import java.awt.desktop.QuitResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -9,9 +17,6 @@ import java.util.prefs.Preferences;
 
 import javax.swing.SwingUtilities;
 
-import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
 import com.tamelea.pm.data.Data;
 
 public final class PeriMeleon {
@@ -81,7 +86,7 @@ public final class PeriMeleon {
 	
 	private void setPlatformSpecificFeatures(){
 		if (PeriMeleon.getOSName() == OSName.MAC) {   
-			new MacOSHandler(); 
+			setupDesktop();
 	    } else if (PeriMeleon.getOSName() == OSName.WINDOWS){
 	    	if (openDocName != null){
 	    		openFileList.add(openDocName);
@@ -90,43 +95,43 @@ public final class PeriMeleon {
 	    }
 	}
 	
-	private class MacOSHandler extends Application{
+	private void setupDesktop() {
+		Desktop.getDesktop().setAboutHandler(new AboutHandler() {
+
+			@Override
+			public void handleAbout(AboutEvent e) {
+				 new Splash();
+			}
+			
+		});
 		
-		@SuppressWarnings("deprecation")
-		private MacOSHandler() {
-			super();
-			addApplicationListener(new AboutBoxHandler());
-			addApplicationListener(new QuitBoxHandler());
-			addApplicationListener(new OpenDocumentHandler());
-	    }
+		Desktop.getDesktop().setQuitHandler(new QuitHandler() {
+
+			@Override
+			public void handleQuitRequestWith(QuitEvent e, QuitResponse response) {
+				 view.performExit(response);
+			}
+
+		});
 		
-		class AboutBoxHandler extends ApplicationAdapter {
-	        public void handleAbout(ApplicationEvent event) {
-	        	event.setHandled(true);
-	            new Splash();
-	        }
-	    }
-		class QuitBoxHandler extends ApplicationAdapter {
-	        public void handleQuit(ApplicationEvent event) {
-	            view.performExit();
-	        }
-	    }
-		
-		class OpenDocumentHandler extends ApplicationAdapter{
-			public void handleOpenFile(ApplicationEvent event) {	
-	            try {
-	            	openFileList.add(new File(event.getFilename()).getCanonicalPath());
+		Desktop.getDesktop().setOpenFileHandler(new OpenFilesHandler() {
+			
+			@Override
+			public void openFiles(OpenFilesEvent e) {
+				List<File> files = e.getFiles();
+				if (files.size() > 0) {
+					try {
+						openFileList.add(files.get(0).getCanonicalPath());
+					} catch (IOException e1) {
+						// PASS
+						// Not likely to occur, and not worth bothering the user if it does
+					}
 	            	view.checkForOpenDocEventFile();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} finally {
-					event.setHandled(true);
 				}
-	            
-	        }
-		}
+			}
+		});
 	}
+
 	
 	public  List<String> getOpenFileList(){
 		return openFileList;

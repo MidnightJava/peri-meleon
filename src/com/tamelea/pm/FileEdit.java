@@ -25,7 +25,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.dom4j.DocumentException;
 
-import com.apple.eio.FileManager;
 import com.tamelea.pm.data.Data;
 import com.tamelea.pm.data.PhoneListMaker;
 import com.tamelea.pm.nhpc.NHPCImportException;
@@ -247,6 +246,7 @@ final class FileEdit {
 			data.setBoundFile(file);
 		}
 		catch(Exception ex) {
+			Splash.INSTANCE.setVisible(false);
 			JOptionPane.showMessageDialog(view,
 					"Open of " + file + " encountered problem:\n" 
 					+ ex.getMessage(),
@@ -411,10 +411,17 @@ final class FileEdit {
 			outputStream.close();
 			data.setBoundFile(file);
 			if (PeriMeleon.getOSName() == OSName.MAC){
-				final String CREATOR_CODE = "504D4C4E";//ASCII PMLN
-				final String FILE_TYPE_CODE = "504D4C44";//ASCII PMLD
-				FileManager.setFileCreator(file.getCanonicalPath(), Integer.parseInt(CREATOR_CODE, 16));
-				FileManager.setFileType(file.getCanonicalPath(), Integer.parseInt(FILE_TYPE_CODE, 16));
+				String[] cmd = new String[] {
+						"xattr",
+						"-wx",
+						"com.apple.FinderInfo",
+						//FILE_TYPE_CODE: "504D4C44" (ASCII PMLD)
+						//CREATOR_CODE: 504D4C4E (ASCII PMLN)
+						"504D4C44504D4C4E000000000000000000000000000000000000000000000000",
+						file.getCanonicalPath()
+				};
+				ProcessBuilder pb = new ProcessBuilder(cmd);
+				pb.start();
 			}
 			
 		}
@@ -637,7 +644,7 @@ final class FileEdit {
 		}
 		
 		public void actionPerformed(ActionEvent e) {
-			view.performExit();
+			view.performExit(null);
 		}
 	}
 }
