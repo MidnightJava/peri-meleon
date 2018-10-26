@@ -12,8 +12,14 @@ Bug Fixes
 </HEAD>
 <BODY BGCOLOR="#ffffff">
 
+<H1>Bugs Fixed in 1.4.2 (2018-10-25T2327Z)</H1>
+<ul>
+	<li>(18) Birthday query now properly matches age filter criteria. For example, a search for members of age 5 on date X will return members
+		whose age on date X is &gt;= 5 and &lt; 6. Previously, it returned members whose 5th birthday was on date X. A similar fix was made
+		for &lt;= and &gt;= queries.
+	</ul>
 
-<H1>Bugs Fixed in 1.4 (TBD)</H1>
+<H1>Bugs Fixed in 1.4.1 (166)</H1>
 <ul>
 	<li>(17) Results table for the Statistical Query ("Transactions for statistics..." from the Queries menu) now displays lines between each row of cells.
 	</ul>

@@ -31,3 +31,6 @@ input
 dist
 build
 /bin/
+
+#signing cert
+*.p12
