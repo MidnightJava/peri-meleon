@@ -92,8 +92,9 @@ Notes:
 	    <fx:application refId="perimeleon"/>
 		<fx:resources refId="appRes" />
 	    <fx:info title="Peri Meleon" />
-  		<fx:bundleArgument arg="mac.signing-key-developer-id-app" value="iPhone Distribution: TyndaleSoft LLC (7LKQP3MSCV)"/>
-   </fx:deploy>
+  		<fx:bundleArgument arg="mac.signing-key-developer-id-installer" value="Developer ID Installer: TyndaleSoft LLC (7LKQP3MSCV)"/>
+  		<fx:bundleargument arg="mac.signing-key-developer-id-app" value="Developer ID Application: TyndaleSoft LLC (7LKQP3MSCV)" />
+  	</fx:deploy>
  
   </target>
 	
