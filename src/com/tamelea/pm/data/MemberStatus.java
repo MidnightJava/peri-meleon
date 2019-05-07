@@ -3,6 +3,7 @@ package com.tamelea.pm.data;
 public enum MemberStatus {
 	NONCOMMUNING,
 	COMMUNING,
+	ASSOCIATE,
 	EXCOMMUNICATED,
 	SUSPENDED,
 	DISMISSAL_PENDING,
@@ -15,6 +16,7 @@ public enum MemberStatus {
 	public static boolean isActive(MemberStatus status) {
 		return status == NONCOMMUNING
 		|| status == COMMUNING
+		|| status == ASSOCIATE
 		|| status == PASTOR
 		|| status == SUSPENDED;
 	}
