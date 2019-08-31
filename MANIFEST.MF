@@ -1,0 +1,20 @@
+Manifest-Version: 1.0
+Created-By: JavaFX Packager
+Main-Class: com.tamelea.pm.PeriMeleon
+Class-Path: lib/avalon-framework-4.2.0.jar lib/batik-all-1.6.jar lib/c
+ ommons-io-1.3.1.jar lib/commons-logging-1.0.4.jar lib/dom4j-1.6.1.jar
+  lib/fop.jar lib/jce.jar lib/jh.jar lib/jsse.jar lib/serializer-2.7.0
+ .jar lib/xalan-2.7.0.jar lib/xercesImpl-2.7.1.jar lib/xml-apis-1.3.02
+ .jar lib/xmlgraphics-commons-1.2.jar lib/README.txt lib/avalon-framew
+ ork.LICENSE.txt lib/batik.LICENSE.txt lib/batik.NOTICE.txt lib/common
+ s-io.LICENSE.txt lib/commons-io.NOTICE.txt lib/commons-logging.LICENS
+ E.txt lib/commons-logging.NOTICE.txt lib/serializer.LICENSE.txt lib/s
+ erializer.NOTICE.txt lib/xalan.BCEL.LICENSE.txt lib/xalan.LICENSE.txt
+  lib/xalan.NOTICE.txt lib/xalan.regexp.LICENSE.txt lib/xalan.runtime.
+ LICENSE.txt lib/xerces.LICENSE.txt lib/xercesImpl.LICENSE.txt lib/xer
+ cesImpl.NOTICE.txt lib/xml-apis.LICENSE.txt lib/xml-apis.NOTICE.txt l
+ ib/xmlgraphics-commons.LICENSE.txt lib/xmlgraphics-commons.NOTICE.txt
+  resource/fop.xconf resource/directory-pdf.xsl
+Permissions: sandbox
+JavaFX-Version: 10.0.2
+

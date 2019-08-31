@@ -39,7 +39,7 @@ final class DirectoryExporterPDF {
 	{
 		Document directory = makeDirectoryDocument();
 		Util.dumpDocument(directory, System.out);
-		Renderer.getRenderer().render(directory, "/Library/Application Support/com.tamelea.perimeleon/resource/directory-pdf.xsl", fos);
+		Renderer.getRenderer().render(directory, "resource/directory-pdf.xsl", fos);
 	}
 	
 	private Document makeDirectoryDocument() {

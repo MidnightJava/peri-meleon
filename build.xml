@@ -2,6 +2,7 @@
 
 <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+(OLD USAGE INSTRUCTIONS. No longer valid. Just run the defalt target now. See first entry in Notes.)
 USAGE: ant [-Dbundles=(image | dmg | pkg | installer | all)] [-Dcleanbuild=<anyvalue>]
 
 image (default):	Build a .app bundle
@@ -17,7 +18,20 @@ Build products can be found in build/.
 
 Notes:
 
-- Java 10 is required, because:
+- The build has been modified to no longer build the MacOS app bundle, as the javafx task recently
+  began fialing with an error that is not readily resolvable. The previous "default" task was renamed
+  "default_old". The current default task just builds a jar file and saves it in /dist. This jar file
+  must be manually inserted to the existing app bundle when changes are required.
+- A task which detects the JDK version was commented out, as itwas needed only for the javafx build. This
+  task runs an exdecutable available on MacOS. With this task removed, the build can be run on other OSs.
+- Hard-coded references in the code to a location in "/Library/Application Support" were changed to relative
+  references in directory "resource". There are two files in this directory that seem to needed. Classpath
+  entries for them were added to the jar manifest file. The "resource" directory must be included in the app
+  bundle in the same directory where the "library" folder and "members.jar" currently reside. If some of the
+  other files in the "resource" directory turn out be needed, we just have to add entries for them in
+  MANIFEST.MF.
+
+- (OBE comment, relevant only for the javafx build): Java 10 is required, because:
 	* Java 8 does not have java.desktop classes.	
 	* Java 9 is beyond End of Life.
 	* In the Java 11 JDK, the ant-javafx.jar file which provides the ant tasks is not currently available.
@@ -29,14 +43,18 @@ Notes:
  
 	<property name="app_version" value="1.4.2" />
 	<property name="lib" location="lib" />
+	<property name="resource" location="resource" />
   	<property name="build.src.dir" value="src"/>
   	<property name="build.classes.dir" value="classes"/>
 	<property name="jdk.version" value="10" />
   	<property name="build.dist.dir" value="dist"/>
 	<property name="build.out.dir" value="build"/>
 	<property name="default.native.bundles" value="image" />
+	<property environment="env" />
+	<property name="JAVA_HOME" value="${env.JAVA_HOME}" />
 	
-	<exec executable="/usr/libexec/java_home" outputproperty="JAVA_HOME" resultproperty="exec.result">
+	<!--This task runs a MacOS executable to check the JDK version. It's no longer required.-->
+	<!-- <exec executable="/usr/libexec/java_home" outputproperty="JAVA_HOME" resultproperty="exec.result">
 		<arg line="-v ${jdk.version} -F" />
 	</exec>
 	<fail message="This script requires JDK version ${jdk.version}, and it is not installed">
@@ -46,20 +64,26 @@ Notes:
 	</fail>
 	
 	<echo message="JAVA HOME: ${JAVA_HOME}" />
+	-->
 
   	<path id="app.classpath">
 		<fileset dir="${lib}">
 			<include name="*.jar" />
 			<include name="*.txt" />
 		</fileset>
+		<fileset dir="${resource}">
+			<include name="*.*" />
+		</fileset>
 		<pathelement path="classes"/>
   	</path>
 	
+	<!-->
 	<condition property="native.bundles" value="${bundles}" else="${default.native.bundles}">
 			<isset property="bundles" />
-	</condition>
+	</condition> -->
  
-  <target name="default" depends="clean,compile">
+ <!-- Javafx task which builds an app bundle. No longer works.-->
+  <target name="default_old" depends="clean,compile">
  
     <taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
       uri="javafx:com.sun.javafx.tools.ant"
@@ -119,15 +143,15 @@ Notes:
  
   <target name="compile" depends="clean">
  
+ <!--JDK 10 is currently embeded in the app. The release attribute must match that.-->
     <javac includeantruntime="false"
-      includeJavaRuntime="true"
       srcdir="${build.src.dir}"
       destdir="${build.classes.dir}"
       fork="yes"
       executable="${JAVA_HOME}/bin/javac"
-      source="${jdk.version}"
-      debug="on"
-      classpathref="app.classpath">
+	  release="10"
+	  classpathref="app.classpath"
+      debug="on">
     </javac>
   	
   	<copy todir="${build.classes.dir}">
@@ -139,6 +163,12 @@ Notes:
 		</fileset>
 	</copy>
     
+  </target>
+	
+  <target name="default" depends="compile">
+	<jar destfile="${build.dist.dir}/members.jar" manifest="./MANIFEST.MF" >
+  		<fileset dir="${build.classes.dir}"/>
+  	</jar>
   </target>
  
 </project>

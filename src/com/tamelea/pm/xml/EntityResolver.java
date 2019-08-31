@@ -19,7 +19,7 @@ public class EntityResolver extends DefaultHandler {
 			String resourceName = "resources" + fileSeparator + schemaName;
 			//System.out.println("Resource name: " + resourceName);
 			InputSource is = new InputSource(ClassLoader
-					.getSystemResourceAsStream("/Library/Application Support/com.tamelea.perimeleon/" + resourceName));
+					.getSystemResourceAsStream("resource/" + resourceName));
 			if (is != null)
 				return is;
 			throw new SAXException("Resource " + resourceName + " not found");

@@ -46,7 +46,7 @@ public final class Renderer {
 	throws SAXException, IOException 
 	{
 		fopFactory = FopFactory.newInstance();
-		fopFactory.setUserConfig("file:/Library/Application Support/com.tamelea.perimeleon/resource/fop.xconf");
+		fopFactory.setUserConfig("file:resource/fop.xconf");
 	}
 	
 	public void render(Document original, String stylesheet, FileOutputStream output) 
