@@ -33,5 +33,8 @@ build
 /bin/
 /classes/
 
+#App template
+PeriMeleon.app
+
 #signing cert
 *.p12

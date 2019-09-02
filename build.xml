@@ -3,27 +3,31 @@
 <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 (OLD USAGE INSTRUCTIONS. No longer valid. Just run the defalt target now. See first entry in Notes.)
-USAGE: ant [-Dbundles=(image | dmg | pkg | installer | all)] [-Dcleanbuild=<anyvalue>]
+XX: USAGE: ant [-Dbundles=(image | dmg | pkg | installer | all)] [-Dcleanbuild=<anyvalue>]
 
-image (default):	Build a .app bundle
-dmg:				Build a .dmg file containing the .app bundle
-pkg:				Build a .pkg executable that installs the .app bundle
-installer:			Build a .dmg and a .pkg file
-all:				Build all of the above, plus launchable jar file. The
+XX: image (default):	Build a .app bundle
+XX: dmg:				Build a .dmg file containing the .app bundle
+XX: pkg:				Build a .pkg executable that installs the .app bundle
+XX: installer:			Build a .dmg and a .pkg file
+XX: all:				Build all of the above, plus launchable jar file. The
 					pkg build will not succeed with this option
 					
-Property cleanbuild will cause the build directory to be deleted.
+XX: Property cleanbuild will cause the build directory to be deleted.
 
-Build products can be found in build/.
+XX: Build products can be found in build/.
 
 Notes:
 
 - The build has been modified to no longer build the MacOS app bundle, as the javafx task recently
   began fialing with an error that is not readily resolvable. The previous "default" task was renamed
-  "default_old". The current default task just builds a jar file and saves it in /dist. This jar file
-  must be manually inserted to the existing app bundle when changes are required.
+  "default_old". The current default task copies a static version of the app bundle to the dist dir,
+  builds a jar file from the curent source, and copies this jar file to the app bundle in the dist dir.
+  The app bundle is ignored by git. Therefore, before building, copy the existing app bundle to
+  PeriMeleom.app in the project root directory.
+
 - A task which detects the JDK version was commented out, as itwas needed only for the javafx build. This
   task runs an exdecutable available on MacOS. With this task removed, the build can be run on other OSs.
+
 - Hard-coded references in the code to a location in "/Library/Application Support" were changed to relative
   references in directory "resource". There are two files in this directory that seem to needed. Classpath
   entries for them were added to the jar manifest file. The "resource" directory must be included in the app
@@ -49,6 +53,9 @@ Notes:
 	<property name="jdk.version" value="10" />
   	<property name="build.dist.dir" value="dist"/>
 	<property name="build.out.dir" value="build"/>
+	<property name="app.src.template.dir" value="PeriMeleon.app" />
+	<property name="dist.app.bundle.dir" value="${build.dist.dir}/PeriMeleon.app" />
+	<property name="app.bundle.jar.path" value="${dist.app.bundle.dir}/Contents/Java/members.jar" />
 	<property name="default.native.bundles" value="image" />
 	<property environment="env" />
 	<property name="JAVA_HOME" value="${env.JAVA_HOME}" />
@@ -164,9 +171,19 @@ Notes:
 	</copy>
     
   </target>
+
+  <target name="copyAppTemplate" depends="compile">
+	<copy todir="${dist.app.bundle.dir}">
+		<fileset dir="${app.src.template.dir}">
+			<include name="**/*" />
+		</fileset>
+	</copy>
 	
-  <target name="default" depends="compile">
-	<jar destfile="${build.dist.dir}/members.jar" manifest="./MANIFEST.MF" >
+  </target>
+
+  <target name="default" depends="copyAppTemplate">
+  	<chmod file="${dist.app.bundle.dir}/Contents/MacOS/Peri Meleon" perm="+x" />
+	<jar destfile="${app.bundle.jar.path}" manifest="./MANIFEST.MF" >
   		<fileset dir="${build.classes.dir}"/>
   	</jar>
   </target>
