@@ -30,7 +30,9 @@ public final class JS {
 	
 	@SuppressWarnings("unchecked")
 	public static void addDate(JSONObject obj, String fieldName, PMDate fieldValue) {
-		obj.put(fieldName,  fieldValue != null ? fieldValue.toIso() : null);
+		if (fieldValue == null) obj.put(fieldName, null);
+		else if (fieldValue.getValue() == null) obj.put(fieldName, null);
+		else obj.put(fieldName, fieldValue.toIso());
 	}
 	
 	@SuppressWarnings("rawtypes")
