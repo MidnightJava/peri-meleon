@@ -286,6 +286,7 @@ public final class Member {
 		JS.addString(obj, "baptism", baptism);
 		JSONArray sarray = new JSONArray();
 		for (Service service : services) sarray.add(service.makeJSON());
+		obj.put("services",  sarray);
 		return obj;
 	}
 }

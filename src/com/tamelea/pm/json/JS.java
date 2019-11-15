@@ -11,21 +11,11 @@ import com.tamelea.pm.data.Phone;
 
 public final class JS {
 	
-	public static void addIndex(PrintStream ps, String fieldName, IntegerIndex fieldValue) {
-		//Export index as string, rather than as number, to ease conversion from internal
-		//indexes to Mongo-assigned indexes (which we treat as strings)
-		ps.println("    \"" + fieldName + "\": " + (fieldValue != null ? "\"" + fieldValue.value() + "\"" : "null") + ",");
-	}
-	
 	@SuppressWarnings("unchecked")
 	public static void addIndex(JSONObject obj, String fieldName, IntegerIndex fieldValue) {
 		//Export index as string, rather than as number, to ease conversion from internal
 		//indexes to Mongo-assigned indexes (which we treat as strings)
-		obj.put(fieldName, fieldValue != null ? Integer.valueOf(fieldValue.value()) : null);
-	}
-	
-	public static void addString(PrintStream ps, String fieldName, PMString fieldValue) {
-		ps.println("    \"" + fieldName + "\": " + (fieldValue != null ? "\"" + fieldValue + "\"" : "null") + ",");
+		obj.put(fieldName, fieldValue != null ? Integer.toString(fieldValue.value()) : null);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -33,17 +23,9 @@ public final class JS {
 		obj.put(fieldName,  fieldValue != null ? fieldValue.toString() : null);
 	}
 	
-	public static void addPhone(PrintStream ps, String fieldName, Phone fieldValue) {
-		ps.println("    \"" + fieldName + "\": " + (fieldValue != null ? "\"" + fieldValue + "\"" : "null") + ",");
-	}
-	
 	@SuppressWarnings("unchecked")
 	public static void addPhone(JSONObject obj, String fieldName, Phone fieldValue) {
 		obj.put(fieldName,  fieldValue != null ? fieldValue.toString() : null);
-	}
-	
-	public static void addDate(PrintStream ps, String fieldName, PMDate fieldValue) {
-		ps.println("    \"" + fieldName + "\": " + (fieldValue != null ? "\"" + fieldValue.toIso() + "\"" : "null") + ",");
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -59,10 +41,6 @@ public final class JS {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void addEnum(JSONObject obj, String fieldName, Enum fieldValue) {
 		obj.put(fieldName, fieldValue != null ? fieldValue.toString() : null);
-	}
-	
-	public static void addBoolean(PrintStream ps, String fieldName, boolean fieldValue) {
-		ps.println("    \"" + fieldName + "\": " + Boolean.toString(fieldValue));
 	}
 	
 	@SuppressWarnings("unchecked")

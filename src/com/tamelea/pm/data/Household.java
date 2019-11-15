@@ -138,22 +138,6 @@ final class Household {
 		parent.add(element);
 	}
 	
-	
-//	void exportJSON(PrintStream ps) {
-//		ps.println("  {");
-//		JS.addIndex(ps, "_id", index);
-//		JS.addIndex(ps, "head", head);
-//		JS.addIndex(ps, "spouse", spouse);
-//		ps.println("    \"others\": [");
-//		for (MemberIndex other : others) {
-//			//Indexes as strings to facilitate change to Mongo indexes
-//			ps.println("    " + (other != null ? "\"" + other.value() + "\"" : "null") + ",");
-//		}
-//		ps.println("    ],");
-//		JS.addIndexNoComma(ps, "address", address);
-//		ps.println("  }");
-//	}
-	
 	@SuppressWarnings("unchecked")
 	JSONObject makeJSON() {
 		JSONObject obj = new JSONObject();
@@ -163,7 +147,7 @@ final class Household {
 		JSONArray othersArray = new JSONArray();
 		for (MemberIndex other : others) {
 			//Indexes as strings to facilitate change to Mongo indexes
-			if (other != null) othersArray.add("\"" + other.value() + "\"");
+			if (other != null) othersArray.add(Integer.toString(other.value()));
 		}
 		obj.put("others",  othersArray);
 		JS.addIndex(obj, "address", address);

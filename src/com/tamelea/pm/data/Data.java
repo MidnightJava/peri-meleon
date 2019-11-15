@@ -935,7 +935,7 @@ public final class Data {
 		obj.put("addresses",  aarray);
 		
 		PrintStream ps = new PrintStream(os);
-		ps.println(obj.toString(2));
+		ps.println(obj);
 		ps.close();
 	}
 	
