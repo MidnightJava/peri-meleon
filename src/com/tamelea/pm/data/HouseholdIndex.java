@@ -4,7 +4,7 @@
  */
 package com.tamelea.pm.data;
 
-public final class HouseholdIndex implements Comparable<HouseholdIndex> {
+public final class HouseholdIndex implements Comparable<HouseholdIndex>, IntegerIndex {
 	final int value;
 	
 	HouseholdIndex(int value) {
@@ -43,5 +43,10 @@ public final class HouseholdIndex implements Comparable<HouseholdIndex> {
 	public static HouseholdIndex valueOf(String string) {
 		if (string.equals("")) return null;
 		return new HouseholdIndex(Integer.parseInt(string));
+	}
+
+	@Override
+	public int value() {
+		return value;
 	}
 }

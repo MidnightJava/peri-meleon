@@ -3,10 +3,14 @@
  */
 package com.tamelea.pm.data;
 
+import java.io.PrintStream;
 import java.util.Date;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.json.simple.JSONObject;
+
+import com.tamelea.pm.json.JS;
 
 @SuppressWarnings("unused")
 public final class Transaction implements Comparable<Transaction> {
@@ -105,5 +109,27 @@ public final class Transaction implements Comparable<Transaction> {
 	public int compareTo(Transaction t) {
 		if (t.date == null) return -1;
 		return this.date.compareTo(t.date);
+	}
+	
+//	void exportJSON(PrintStream ps) {
+//		ps.println("    {");
+//		JS.addIndex(ps, "index", index);
+//		JS.addDate(ps, "date", date);
+//		JS.addEnum(ps, "type", type);
+//		JS.addString(ps, "authority", authority);
+//		JS.addString(ps, "church", church);
+//		JS.addStringNoComma(ps, "comment", comment);
+//		ps.println("    },");
+//	}
+	
+	JSONObject makeJSON() {
+		JSONObject obj = new JSONObject();
+		JS.addIndex(obj, "index", index);
+		JS.addDate(obj, "date", date);
+		JS.addEnum(obj, "type", type);
+		JS.addString(obj, "authority", authority);
+		JS.addString(obj, "church", church);
+		JS.addString(obj, "comment", comment);
+		return obj;
 	}
 }

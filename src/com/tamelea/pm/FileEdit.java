@@ -49,6 +49,7 @@ final class FileEdit {
 	private FileExportDirectoryActionPDF	fileExportDirectoryPDF;
 	private FileExportPhoneListAction	fileExportPhoneList;
 	private FileImportNHPCAction		fileImportNHPC;
+	private FileExportJSONAction		fileExportJSON;
 	private FileExitAction				fileExit;
 	
 	FileEdit(PeriMeleonView view, Data data) {
@@ -82,6 +83,8 @@ final class FileEdit {
 
 		fileImportNHPC = new FileImportNHPCAction();
 		fileMenu.add(fileImportNHPC);
+		fileExportJSON = new FileExportJSONAction();
+		fileMenu.add(fileExportJSON);
 		fileMenu.addSeparator();
 		
 		if (!(PeriMeleon.getOSName() == OSName.MAC)){
@@ -506,6 +509,29 @@ final class FileEdit {
 		}
 		view.setMostRecentDirectory(view.getFileChooser().getCurrentDirectory());
 	}
+
+	private void exportJSON() {
+		File file = chooseOutputFile(
+				new MembersJSONFileFilter(), 
+				"members.json", 
+				"Save Members As JSON");
+		if (file == null) return;
+		try {
+			FileOutputStream fos = new FileOutputStream(file);
+			data.exportJSON(fos);
+			fos.close();
+			//data.setBoundFile(file);
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(view,
+					"Save failed: " + ex.getMessage()
+					+ " (" + ex.getClass().getSimpleName() + ")",
+					"Save Failed",
+					JOptionPane.ERROR_MESSAGE);
+		}
+		//view.setMostRecentDirectory(view.getFileChooser().getCurrentDirectory());
+	}
 	
 	private final class FileNewAction extends AbstractAction {
 	    Object[] dialogLabels = { "Discard changes", "Cancel open" };
@@ -634,6 +660,16 @@ final class FileEdit {
 		
 		public void actionPerformed(ActionEvent e) {
 			importNHPCData();
+		}
+	}
+	
+	private final class FileExportJSONAction extends AbstractAction {
+	    public FileExportJSONAction() {
+			super("Export JSON");
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			exportJSON();
 		}
 	}
 

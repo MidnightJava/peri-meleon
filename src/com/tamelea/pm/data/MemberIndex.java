@@ -4,7 +4,7 @@
  */
 package com.tamelea.pm.data;
 
-public final class MemberIndex implements Comparable<MemberIndex> {
+public final class MemberIndex implements Comparable<MemberIndex>, IntegerIndex {
 	final int value;
 	
 	MemberIndex(int value) {
@@ -33,5 +33,10 @@ public final class MemberIndex implements Comparable<MemberIndex> {
 	public static MemberIndex valueOf(String string) {
 		if (string.equals("")) return null;
 		return new MemberIndex(Integer.parseInt(string));
+	}
+
+	@Override
+	public int value() {
+		return value;
 	}
 }

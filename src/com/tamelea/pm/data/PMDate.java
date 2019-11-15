@@ -47,6 +47,11 @@ public final class PMDate implements Comparable<PMDate> {
 		return PeriMeleon.dateFormat.format(value);
 	}
 	
+	public String toIso() {
+		if (value == null) return "";
+		return PeriMeleon.isoFormat.format(value);
+	}
+	
 	public static PMDate valueOf(String parseString)
 	throws java.text.ParseException
 	{

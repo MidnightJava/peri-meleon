@@ -4,7 +4,7 @@
  */
 package com.tamelea.pm.data;
 
-public final class AddressIndex implements Comparable<AddressIndex> {
+public final class AddressIndex implements Comparable<AddressIndex>, IntegerIndex {
 	final int value;
 	
 	AddressIndex(int value) {
@@ -43,5 +43,10 @@ public final class AddressIndex implements Comparable<AddressIndex> {
 	public static AddressIndex valueOf(String string) {
 		if (string.equals("")) return null;
 		return new AddressIndex(Integer.parseInt(string));
+	}
+
+	@Override
+	public int value() {
+		return value;
 	}
 }

@@ -1,9 +1,13 @@
 package com.tamelea.pm.data;
 
+import java.io.PrintStream;
 import java.util.Date;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.json.simple.JSONObject;
+
+import com.tamelea.pm.json.JS;
 
 @SuppressWarnings("unused")
 public final class Service implements Comparable<Service> {
@@ -96,5 +100,25 @@ public final class Service implements Comparable<Service> {
 	public int compareTo(Service t) {
 		if (t.date == null) return -1;
 		return this.date.compareTo(t.date);
+	}
+	
+//	void exportJSON(PrintStream ps) {
+//		ps.println("    {");
+//		JS.addIndex(ps, "index", index);
+//		JS.addDate(ps, "date", date);
+//		JS.addEnum(ps, "type", type);
+//		JS.addString(ps, "place", place);
+//		JS.addStringNoComma(ps, "comment", comment);
+//		ps.println("    }");
+//	}
+	
+	JSONObject makeJSON() {
+		JSONObject obj = new JSONObject();
+		JS.addIndex(obj, "index", index);
+		JS.addDate(obj, "date", date);
+		JS.addEnum(obj, "type", type);
+		JS.addString(obj, "place", place);
+		JS.addString(obj, "comment", comment);
+		return obj;
 	}
 }

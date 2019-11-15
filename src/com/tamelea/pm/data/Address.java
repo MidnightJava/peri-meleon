@@ -1,5 +1,6 @@
 package com.tamelea.pm.data;
 
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -9,6 +10,9 @@ import java.util.Set;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.json.simple.JSONObject;
+
+import com.tamelea.pm.json.JS;
 
 /**
  * An address of a family or person.
@@ -96,5 +100,36 @@ final class Address {
 			element.addAttribute(field.toString(), valueString);
 		}
 		parent.add(element);
+	}
+	
+	
+//	void exportJSON(PrintStream ps) {
+//		ps.println("  {");
+//		JS.addIndex(ps, "_id", index);
+//		//JS.addString(ps, "name", name); appears to be obsolete
+//		JS.addString(ps, "address", address);
+//		JS.addString(ps, "address2", address2);
+//		JS.addString(ps, "city", city);
+//		JS.addString(ps, "state", state);
+//		JS.addString(ps, "postalCode", postalCode);
+//		JS.addString(ps, "country", country);
+//		JS.addPhone(ps, "homePhone", homePhone);
+//		JS.addStringNoComma(ps, "eMail", eMail);
+//		ps.println("  }");
+//	}
+	
+	JSONObject makeJSON() {
+		JSONObject obj = new JSONObject();
+		JS.addIndex(obj, "_id", index);
+		//JS.addString(ps, "name", name); appears to be obsolete
+		JS.addString(obj, "address", address);
+		JS.addString(obj, "address2", address2);
+		JS.addString(obj, "city", city);
+		JS.addString(obj, "state", state);
+		JS.addString(obj, "postalCode", postalCode);
+		JS.addString(obj, "country", country);
+		JS.addPhone(obj, "homePhone", homePhone);
+		JS.addString(obj, "eMail", eMail);
+		return obj;
 	}
 }

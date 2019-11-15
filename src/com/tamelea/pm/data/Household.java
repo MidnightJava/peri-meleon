@@ -1,5 +1,6 @@
 package com.tamelea.pm.data;
 
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -9,6 +10,10 @@ import java.util.Set;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import com.tamelea.pm.json.JS;
 
 /**
  * A household or family, of one or more members.
@@ -131,5 +136,37 @@ final class Household {
 			element.add(adultElement);
 		}
 		parent.add(element);
+	}
+	
+	
+//	void exportJSON(PrintStream ps) {
+//		ps.println("  {");
+//		JS.addIndex(ps, "_id", index);
+//		JS.addIndex(ps, "head", head);
+//		JS.addIndex(ps, "spouse", spouse);
+//		ps.println("    \"others\": [");
+//		for (MemberIndex other : others) {
+//			//Indexes as strings to facilitate change to Mongo indexes
+//			ps.println("    " + (other != null ? "\"" + other.value() + "\"" : "null") + ",");
+//		}
+//		ps.println("    ],");
+//		JS.addIndexNoComma(ps, "address", address);
+//		ps.println("  }");
+//	}
+	
+	@SuppressWarnings("unchecked")
+	JSONObject makeJSON() {
+		JSONObject obj = new JSONObject();
+		JS.addIndex(obj, "_id", index);
+		JS.addIndex(obj, "head", head);
+		JS.addIndex(obj, "spouse", spouse);
+		JSONArray othersArray = new JSONArray();
+		for (MemberIndex other : others) {
+			//Indexes as strings to facilitate change to Mongo indexes
+			if (other != null) othersArray.add("\"" + other.value() + "\"");
+		}
+		obj.put("others",  othersArray);
+		JS.addIndex(obj, "address", address);
+		return obj;
 	}
 }

@@ -5,6 +5,7 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.ParseException;
@@ -29,6 +30,8 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import com.tamelea.pm.PeriMeleon;
 
@@ -912,6 +915,28 @@ public final class Data {
 		for (Household household : households.values()) household.save(root);
 		for (Address address : addresses.values()) address.save(root);
 		return document;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void exportJSON(OutputStream os) 
+	throws java.io.IOException
+	{
+		JSONObject obj = new JSONObject();
+		JSONArray marray = new JSONArray();
+		for (Member member: members.values()) marray.add(member.makeJSON());
+		obj.put("members",  marray);
+		
+		JSONArray harray = new JSONArray();
+		for (Household household : households.values()) harray.add(household.makeJSON());
+		obj.put("households",  harray);
+		
+		JSONArray aarray = new JSONArray();
+		for (Address address : addresses.values()) aarray.add(address.makeJSON());
+		obj.put("addresses",  aarray);
+		
+		PrintStream ps = new PrintStream(os);
+		ps.println(obj);
+		ps.close();
 	}
 	
 	/**
