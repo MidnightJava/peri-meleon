@@ -118,18 +118,21 @@ final class Address {
 //		ps.println("  }");
 //	}
 	
+	@SuppressWarnings("unchecked")
 	JSONObject makeJSON() {
 		JSONObject obj = new JSONObject();
-		JS.addIndex(obj, "_id", index);
+		JS.addIndex(obj, "id", index);
 		//JS.addString(ps, "name", name); appears to be obsolete
-		JS.addString(obj, "address", address);
-		JS.addString(obj, "address2", address2);
-		JS.addString(obj, "city", city);
-		JS.addString(obj, "state", state);
-		JS.addString(obj, "postalCode", postalCode);
-		JS.addString(obj, "country", country);
-		JS.addPhone(obj, "homePhone", homePhone);
-		JS.addString(obj, "eMail", eMail);
+		JSONObject val = new JSONObject();
+		JS.addString(val, "address", address);
+		JS.addString(val, "address2", address2);
+		JS.addString(val, "city", city);
+		JS.addString(val, "state", state);
+		JS.addString(val, "postalCode", postalCode);
+		JS.addString(val, "country", country);
+		JS.addPhone(val, "homePhone", homePhone);
+		JS.addString(val, "eMail", eMail);
+		obj.put("value",  val);
 		return obj;
 	}
 }

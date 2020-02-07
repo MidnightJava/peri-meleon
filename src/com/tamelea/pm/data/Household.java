@@ -141,16 +141,18 @@ final class Household {
 	@SuppressWarnings("unchecked")
 	JSONObject makeJSON() {
 		JSONObject obj = new JSONObject();
-		JS.addIndex(obj, "_id", index);
-		JS.addIndex(obj, "head", head);
-		JS.addIndex(obj, "spouse", spouse);
+		JS.addIndex(obj, "id", index);
+		JSONObject val = new JSONObject();
+		JS.addIndex(val, "head", head);
+		JS.addIndex(val, "spouse", spouse);
 		JSONArray othersArray = new JSONArray();
 		for (MemberIndex other : others) {
 			//Indexes as strings to facilitate change to Mongo indexes
 			if (other != null) othersArray.add(Integer.toString(other.value()));
 		}
-		obj.put("others",  othersArray);
-		JS.addIndex(obj, "address", address);
+		val.put("others",  othersArray);
+		JS.addIndex(val, "address", address);
+		obj.put("value",  val);
 		return obj;
 	}
 }
