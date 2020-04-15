@@ -124,12 +124,13 @@ public final class Transaction implements Comparable<Transaction> {
 	
 	JSONObject makeJSON() {
 		JSONObject obj = new JSONObject();
-		JS.addIndex(obj, "index", index);
-		JS.addDate(obj, "date", date);
-		JS.addEnum(obj, "type", type);
-		JS.addString(obj, "authority", authority);
-		JS.addString(obj, "church", church);
-		JS.addString(obj, "comment", comment);
+		JS.addString(obj, "py/object", "pm_data_types.member.Transaction");
+		JS.addIndex(obj, "_Transaction__index", index);
+		JS.addDate(obj, "_Transaction__date", date);
+		JS.addEnum(obj, "_Transaction__type", type);
+		JS.addString(obj, "_Transaction__authority", authority);
+		JS.addString(obj, "_Transaction__church", church);
+		JS.addString(obj, "_Transaction__comment", comment);
 		return obj;
 	}
 }

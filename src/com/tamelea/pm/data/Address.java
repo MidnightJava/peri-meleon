@@ -121,18 +121,17 @@ final class Address {
 	@SuppressWarnings("unchecked")
 	JSONObject makeJSON() {
 		JSONObject obj = new JSONObject();
-		JS.addIndex(obj, "id", index);
+		//JS.addIndex(obj, "id", index);
 		//JS.addString(ps, "name", name); appears to be obsolete
-		JSONObject val = new JSONObject();
-		JS.addString(val, "address", address);
-		JS.addString(val, "address2", address2);
-		JS.addString(val, "city", city);
-		JS.addString(val, "state", state);
-		JS.addString(val, "postalCode", postalCode);
-		JS.addString(val, "country", country);
-		JS.addPhone(val, "homePhone", homePhone);
-		JS.addString(val, "eMail", eMail);
-		obj.put("value",  val);
+		JS.addString(obj, "py/object", "pm_data_types.address.Address");
+		JS.addString(obj, "_Address__address", address);
+		JS.addString(obj, "_Address__address2", address2);
+		JS.addString(obj, "_Address__city", city);
+		JS.addString(obj, "_Address__state", state);
+		JS.addString(obj, "_Address__postal_code", postalCode);
+		JS.addString(obj, "_Address__country", country);
+		JS.addPhone(obj, "_Address__home_phone", homePhone);
+		JS.addString(obj, "_Address__email", eMail);
 		return obj;
 	}
 }

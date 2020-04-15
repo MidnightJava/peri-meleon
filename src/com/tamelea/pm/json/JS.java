@@ -24,6 +24,11 @@ public final class JS {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public static void addString(JSONObject obj, String fieldName, String fieldValue) {
+		obj.put(fieldName,  fieldValue != null ? fieldValue : null);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static void addPhone(JSONObject obj, String fieldName, Phone fieldValue) {
 		obj.put(fieldName,  fieldValue != null ? fieldValue.toString() : null);
 	}

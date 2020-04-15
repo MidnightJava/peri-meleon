@@ -141,18 +141,17 @@ final class Household {
 	@SuppressWarnings("unchecked")
 	JSONObject makeJSON() {
 		JSONObject obj = new JSONObject();
-		JS.addIndex(obj, "id", index);
-		JSONObject val = new JSONObject();
-		JS.addIndex(val, "head", head);
-		JS.addIndex(val, "spouse", spouse);
+		JS.addString(obj, "py/object", "pm_data_types.household.Household");
+		JS.addIndex(obj, "_Household__id", index);
+		JS.addIndex(obj, "_Household__head", head);
+		JS.addIndex(obj, "_Household__spouse", spouse);
 		JSONArray othersArray = new JSONArray();
 		for (MemberIndex other : others) {
 			//Indexes as strings to facilitate change to Mongo indexes
 			if (other != null) othersArray.add(Integer.toString(other.value()));
 		}
-		val.put("others",  othersArray);
-		JS.addIndex(val, "address", address);
-		obj.put("value",  val);
+		obj.put("_Household__others",  othersArray);
+		JS.addIndex(obj, "_Household__address", address);
 		return obj;
 	}
 }

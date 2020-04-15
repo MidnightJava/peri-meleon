@@ -114,11 +114,12 @@ public final class Service implements Comparable<Service> {
 	
 	JSONObject makeJSON() {
 		JSONObject obj = new JSONObject();
-		JS.addIndex(obj, "index", index);
-		JS.addDate(obj, "date", date);
-		JS.addEnum(obj, "type", type);
-		JS.addString(obj, "place", place);
-		JS.addString(obj, "comment", comment);
+		JS.addString(obj, "py/object", "pm_data_types.member.Service");
+		JS.addIndex(obj, "_Service__index", index);
+		JS.addDate(obj, "_Service__date", date);
+		JS.addEnum(obj, "_Service__type", type);
+		JS.addString(obj, "_Service__place", place);
+		JS.addString(obj, "_Service__comment", comment);
 		return obj;
 	}
 }
