@@ -256,7 +256,7 @@ public final class Member {
 		JS.addString(obj, "_Member__family_name", lastName);
 		JS.addString(obj, "_Member__given_name", firstName);
 		JS.addString(obj, "_Member__middle_name", middleName);
-		JS.addString(obj, "_Member__previous_family_nName", maidenName);
+		JS.addString(obj, "_Member__previous_family_name", maidenName);
 		JS.addString(obj, "_Member__name_suffix", suffix);
 		JS.addString(obj, "_Member__title", title);
 		JS.addString(obj, "_Member__nickname", nickName);

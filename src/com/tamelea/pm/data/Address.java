@@ -121,7 +121,7 @@ final class Address {
 	@SuppressWarnings("unchecked")
 	JSONObject makeJSON() {
 		JSONObject obj = new JSONObject();
-		//JS.addIndex(obj, "id", index);
+		JS.addIndex(obj, "_Address__id", index);
 		//JS.addString(ps, "name", name); appears to be obsolete
 		JS.addString(obj, "py/object", "pm_data_types.address.Address");
 		JS.addString(obj, "_Address__address", address);
