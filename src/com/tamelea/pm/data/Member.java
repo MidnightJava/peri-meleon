@@ -252,7 +252,7 @@ public final class Member {
 	JSONObject makeJSON() {
 		JSONObject obj = new JSONObject();
 		JS.addString(obj, "py/object", "pm_data_types.member.Member");
-		JS.addIndex(obj, "_Member__member_id", index);
+		JS.addIndex(obj, "_Member__id", index);
 		JS.addString(obj, "_Member__family_name", lastName);
 		JS.addString(obj, "_Member__given_name", firstName);
 		JS.addString(obj, "_Member__middle_name", middleName);
